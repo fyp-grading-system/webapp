@@ -2,7 +2,7 @@ import Head from "next/head";
 import { TopBar } from "../components/TopBar";
 import styles from "../styles/Home.module.css";
 
-export default function Home() {
+export default function Juries() {
   return (
     <div className={styles.container}>
       <Head>
