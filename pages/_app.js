@@ -1,36 +1,16 @@
-import cookie from "cookie";
 import * as React from "react";
-import { SSRKeycloakProvider, SSRCookies } from "@react-keycloak/ssr";
-import "../styles/globals.css"
+import "../styles/globals.css";
+import { SessionProvider } from "next-auth/react";
+import Guard from "../components/Guard";
 
-const keycloakCfg = {
-  realm: "",
-  url: "",
-  clientId: "",
-};
-
-function MyApp({ Component, pageProps, cookies }) {
+function MyApp({ Component, pageProps, session }) {
   return (
-    // <SSRKeycloakProvider
-    //   keycloakConfig={keycloakCfg}
-    //   persistor={SSRCookies(cookies)}
-    // >
-      <Component {...pageProps} />
-    // </SSRKeycloakProvider>
+    <SessionProvider session={session}>
+      <Guard>
+        <Component {...pageProps} />
+      </Guard>
+    </SessionProvider>
   );
 }
-
-function parseCookies(req) {
-  if (!req || !req.headers) {
-    return {};
-  }
-  return cookie.parse(req.headers.cookie || "");
-}
-
-MyApp.getInitialProps = async (context) => {
-  return {
-    cookies: parseCookies(context?.ctx?.req),
-  };
-};
 
 export default MyApp;

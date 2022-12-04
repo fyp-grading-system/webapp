@@ -6,8 +6,12 @@ import Link from "next/link";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Button, Divider, List, ListItem, ListItemText } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useCommonData } from "../providers/data";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Stack } from "@mui/system";
 
-export default function TeamCard({ teamName, members }) {
+export default function TeamCard({ teamName, members, id, membersGrades }) {
+  const { topics, deleteTeam } = useCommonData();
   return (
     <Card sx={{ minWidth: 260, borderRadius: "16px" }}>
       <CardContent>
@@ -20,27 +24,48 @@ export default function TeamCard({ teamName, members }) {
 
         <List sx={{ width: "100%", bgcolor: "background.paper" }}>
           {members.map((member) => (
-            <ListItem key={member.id} alignItems="flex-start">
-              <ListItemText
-                primary={
-                  <Typography variant="subtitle1" gutterBottom>
-                    {member.fullName}
-                  </Typography>
-                }
-              />
-              <Link href={`/user-grade/${member.id}?name=${member.fullName}`}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  endIcon={<CloudUploadIcon />}
-                  size="small"
-                >
-                  Grade
-                </Button>
-              </Link>
-            </ListItem>
+            <Typography key={member} variant="subtitle1" gutterBottom>
+              {member.name}
+              <Stack>
+                {membersGrades
+                  ?.filter((x) => x.studentId == member.email)
+                  ?.map(
+                    (grade) =>
+                      `${
+                        topics.filter((topic) => topic.id == grade.topicId)[0]
+                          .name
+                      } : ${grade.grade}`
+                  )}
+              </Stack>
+            </Typography>
           ))}
         </List>
+
+        <div style={{ display: "flex" }}>
+          <Link href={topics?.length == 0 ? {} : `/team-grade/${id}`}>
+            <Button
+              variant="outlined"
+              color="primary"
+              endIcon={<CloudUploadIcon />}
+              size="small"
+              disabled={topics?.length == 0}
+            >
+              Grade
+            </Button>
+          </Link>
+          <Button
+            variant="outlined"
+            color="error"
+            endIcon={<DeleteIcon />}
+            size="small"
+            sx={{ ml: "1rem" }}
+            onClick={() => {
+              deleteTeam(id);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

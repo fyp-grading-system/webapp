@@ -1,29 +1,21 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { FileUploader } from "react-drag-drop-files";
 import { MenuItem, Typography } from "@mui/material";
-import { useState } from "react";
-
-const fileTypes = ["XLSX"];
+import UploadJuriesAndTeams from "./UploadJuriesAndTeams";
+import { useCommonData } from "../providers/data";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function UploadJuriesAndTeamsMenuItem() {
+export default function UploadJuriesAndTeamsMenuItem({ onOpen = () => {} }) {
   const [open, setOpen] = React.useState(false);
-  const [file, setFile] = useState(null);
-  const handleChange = (file) => {
-    setFile(file);
-  };
+  const { isTeamsLoading } = useCommonData();
 
   const handleClickOpen = () => {
+    onOpen();
     setOpen(true);
   };
 
@@ -41,13 +33,13 @@ export default function UploadJuriesAndTeamsMenuItem() {
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
+        aria-describedby={`alert-dialog-slide-description ${isTeamsLoading}`}
       >
         <DialogContent>
-          <FileUploader
-            handleChange={handleChange}
-            name="file"
-            types={fileTypes}
+          <UploadJuriesAndTeams
+            close={() => {
+              handleClose();
+            }}
           />
         </DialogContent>
       </Dialog>

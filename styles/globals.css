@@ -1,7 +1,20 @@
+body {
+  margin: 0;
+}
+
 .active {
   background-color: #ffffff3b !important;
 }
 
 a {
   text-decoration: none;
+}
+
+.dmajdp>span {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  font-size: 1rem !important;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+  margin-left: 0.5rem;
 }
